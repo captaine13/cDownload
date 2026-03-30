@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>cDownload</title>
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4f98a3">
+</head>
+<body>
+
+<main class="page" id="main">
+
+  <!-- ── Header ── -->
+  <header>
+    <a href="#" class="logo" aria-label="cdownload home">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="36" height="36" rx="10" fill="var(--color-primary)"/>
+        <path d="M12 18a6 6 0 1 0 6-6" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M18 20v-8M14.5 17.5 18 21l3.5-3.5" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="logo-name">c<span>Download</span></span>
+    </a>
+    <button class="theme-btn" data-theme-toggle aria-label="Switch theme"></button>
+  </header>
+
+  <!-- ── Input Card ── -->
+  <div class="input-card">
+    <label class="input-label" for="url-input">Paste media URL</label>
+
+    <div class="url-row">
+      <input
+        id="url-input"
+        class="url-input"
+        type="url"
+        placeholder="..."
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <div class="url-input-actions">
+        <button class="icon-btn" id="paste-btn" title="Paste from clipboard" aria-label="Paste URL">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="9" y="2" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="clear-url-btn" title="Clear" aria-label="Clear URL" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Platform detection badge -->
+    <div class="platform-row">
+      <div class="platform-badge" id="platform-badge" aria-live="polite"></div>
+    </div>
+
+    <!-- Quality & format options -->
+    <div class="options-grid">
+      <div class="option-group">
+        <label class="option-label" for="quality-select">Quality</label>
+        <select class="select" id="quality-select">
+          <option value="max">Best available</option>
+          <option value="2160">4K (2160p)</option>
+          <option value="1440">1440p</option>
+          <option value="1080" selected>1080p</option>
+          <option value="720">720p</option>
+          <option value="480">480p</option>
+          <option value="360">360p</option>
+        </select>
+      </div>
+      <!-- Hidden until audio-only is toggled on -->
+      <div class="option-group" id="format-group">
+        <label class="option-label" for="format-select">Audio format</label>
+        <select class="select" id="format-select" disabled>
+          <option value="mp3">MP3</option>
+          <option value="ogg">OGG</option>
+          <option value="wav">WAV</option>
+          <option value="opus">Opus</option>
+          <option value="best">Best quality</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Audio-only toggle -->
+    <div class="toggle-row">
+      <div class="toggle-label-group">
+        <span class="toggle-label">Audio only</span>
+        <span class="toggle-sublabel">Extract audio track only</span>
+      </div>
+      <label class="toggle" aria-label="Audio only mode">
+        <input type="checkbox" id="audio-toggle">
+        <span class="toggle-track"></span>
+        <span class="toggle-thumb"></span>
+      </label>
+    </div>
+
+    <!-- Main download button -->
+    <button class="btn-download" id="download-btn" disabled>
+      <div class="spinner" aria-hidden="true"></div>
+      <span class="btn-text">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             style="display:inline;vertical-align:middle;margin-right:6px">
+          <path d="M12 3v13M7 11l5 5 5-5"/>
+          <path d="M3 19h18" stroke-width="2"/>
+        </svg>
+        Download
+      </span>
+    </button>
+  </div>
+
+  <!-- ── Result area ── -->
+  <div class="result-area" id="result-area" aria-live="polite" role="region" aria-label="Download result">
+    <div class="result-card" id="result-card"></div>
+  </div>
+
+  <!-- ── History ── -->
+  <section class="history-section" aria-label="Download history">
+    <div class="history-header">
+      <span class="history-title">Recent downloads</span>
+      <button class="clear-btn" id="clear-history-btn" aria-label="Clear history">Clear</button>
+    </div>
+    <div class="history-list" id="history-list">
+      <div class="empty-history">No downloads yet</div>
+    </div>
+  </section>
+
+  <!-- ── Supported platforms ── -->
+  <div class="platforms-note">
+    <p>Powered by Cobalt · Supports 20+ platforms</p>
+    <div class="platform-chips">
+      <span class="platform-chip">YouTube</span>
+      <span class="platform-chip">Instagram</span>
+      <span class="platform-chip">TikTok</span>
+      <span class="platform-chip">Twitter / X</span>
+      <span class="platform-chip">Reddit</span>
+      <span class="platform-chip">Twitch</span>
+      <span class="platform-chip">Vimeo</span>
+      <span class="platform-chip">SoundCloud</span>
+      <span class="platform-chip">Pinterest</span>
+      <span class="platform-chip">Tumblr</span>
+    </div>
+  </div>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
